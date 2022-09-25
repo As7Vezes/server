@@ -1,0 +1,65 @@
+import { Ibook, libraryModel } from "../model/libraryModel";
+import { badRequest, internalServerError } from "../utils/util";
+import { Request, Response } from "express";
+import { ResolveOptions } from "dns";
+
+const insertBook = async (req: Request, res: Response) => {
+
+    const book: Ibook = req.body as Ibook
+    try {
+        const product = await libraryModel.insertBilbi(book);
+        return res.json(product);
+    } catch (err) {
+        return internalServerError(res, err);
+    }
+}
+
+const listBooks = (req: Request, res: Response) => {
+    libraryModel.listBooks()
+    .then(products => {
+        res.json(products)
+    })
+    .catch(err => internalServerError(res, err));
+}
+
+const getBooks = async (req: Request, res: Response) => {
+
+        const id = parseInt(req.params.id)
+        const retorno = await libraryModel.getBook(id)
+
+        if(retorno){
+            return res.json(retorno) 
+        }
+
+        return res.json({erro: 'error'})
+}
+
+const deleteBook = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id)
+    const retorno = await libraryModel.deleteBook(id)
+    if(retorno){
+        return res.sendStatus(200)
+    }
+}
+
+const updateBook = async (req: Request, res: Response) => {
+
+    const id = parseInt(req.params.id)
+    const book: Ibook = req.body as Ibook
+    {
+        const productSave = libraryModel.getBook(id)
+        if(!productSave)
+            return res.json({ message: 'book not found'})
+    }  
+    
+    const retorno = await libraryModel.updateBook(book,id)
+    return res.json(retorno)
+}
+
+export const libraryController = {
+    insertBook,
+    listBooks,
+    getBooks,
+    deleteBook,
+    updateBook
+}
