@@ -1,23 +1,28 @@
 import { Ibook, libraryModel } from "../model/libraryModel";
 import { badRequest, internalServerError } from "../utils/util";
 import { Request, Response } from "express";
-import { ResolveOptions } from "dns";
 
 const insertBook = async (req: Request, res: Response) => {
 
     const book: Ibook = req.body as Ibook
-    try {
-        const product = await libraryModel.insertBilbi(book);
-        return res.json(product);
-    } catch (err) {
-        return internalServerError(res, err);
-    }
+
+        if(req.file){
+            book.image = req.file.filename
+            const product = await libraryModel.insertBilbi(book);
+            return res.json(product);   
+        }else{
+            const product = await libraryModel.insertBilbi(book);
+            return res.json(product);
+        }
 }
 
 const listBooks = (req: Request, res: Response) => {
     libraryModel.listBooks()
     .then(products => {
-        res.json(products)
+        res.json({
+            products,
+            url: 'http://localhost:8787/files/'
+        })
     })
     .catch(err => internalServerError(res, err));
 }
@@ -28,7 +33,10 @@ const getBooks = async (req: Request, res: Response) => {
         const retorno = await libraryModel.getBook(id)
 
         if(retorno){
-            return res.json(retorno) 
+            return res.json({
+                retorno,
+                url: 'http://localhost:8787/files/'
+            }) 
         }
 
         return res.json({erro: 'error'})
@@ -50,10 +58,18 @@ const updateBook = async (req: Request, res: Response) => {
         const productSave = libraryModel.getBook(id)
         if(!productSave)
             return res.json({ message: 'book not found'})
-    }  
-    
-    const retorno = await libraryModel.updateBook(book,id)
-    return res.json(retorno)
+    } 
+
+    if(req.file){
+        book.image = req.file.filename
+        const retorno = await libraryModel.updateBook(book,id)
+        return res.json(retorno)
+    }
+    else{
+        const retorno = await libraryModel.updateBook(book,id)
+        return res.json(retorno)
+    }
+
 }
 
 export const libraryController = {

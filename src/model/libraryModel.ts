@@ -1,10 +1,11 @@
 import { dbQuery, dbQueryFirst } from "../database/db";
 
 export interface Ibook {
-    nome: string,
-    autor: string,
-    editora: string,
-    image: string
+    map(): unknown;
+    nome?: string,
+    autor?: string,
+    editora?: string,
+    image?: string
 }
 
 
@@ -35,10 +36,40 @@ const deleteBook = async (id: number) => {
 }
 
 const updateBook = async (book: Ibook, id: number) => {
-    await dbQuery(
-        `UPDATE library SET nome = ?, autor = ?, editora = ?, imagem = ?  WHERE id = ?`, 
-        [book.nome, book.autor, book.editora, book.image, id],
-    )
+    let query: string = 'UPDATE library SET '
+
+    if(book.nome){
+        if(book.autor){
+            query += `nome = "${book.nome}",`
+        }else{
+            query += `nome = "${book.nome}"`
+        }
+    }
+    if(book.autor){
+        if(book.editora){
+            query += `autor = "${book.autor}",`
+        }else{
+            query += `autor = "${book.autor}"`
+        }
+    }
+    if(book.editora){
+        if(book.image){
+            query += `autor = "${book.editora}",`
+        }else{
+            query += `autor = "${book.editora}"`
+        }
+    }
+    if(book.image){
+        query += `imagem = "${book.image}" `
+    }
+
+
+    console.log(query)
+
+    query += ` WHERE id = ${id}`
+
+
+    await dbQuery(query)
     return getBook(id)
 }
 
