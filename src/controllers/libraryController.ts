@@ -7,7 +7,7 @@ const insertBook = async (req: Request, res: Response) => {
     const book: Ibook = req.body as Ibook
 
         if(req.file){
-            book.image = req.file.filename
+            book.imagem = req.file.filename
             const product = await libraryModel.insertBilbi(book);
             return res.json(product);   
         }else{
@@ -45,7 +45,7 @@ const getBooks = async (req: Request, res: Response) => {
 const deleteBook = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id)
     const retorno = await libraryModel.deleteBook(id)
-    if(retorno){
+    if(retorno || undefined){
         return res.sendStatus(200)
     }
 }
@@ -61,7 +61,7 @@ const updateBook = async (req: Request, res: Response) => {
     } 
 
     if(req.file){
-        book.image = req.file.filename
+        book.imagem = req.file.filename
         const retorno = await libraryModel.updateBook(book,id)
         return res.json(retorno)
     }

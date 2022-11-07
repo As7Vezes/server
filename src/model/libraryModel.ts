@@ -5,7 +5,7 @@ export interface Ibook {
     nome?: string,
     autor?: string,
     editora?: string,
-    image?: string
+    imagem?: string
 }
 
 
@@ -13,7 +13,7 @@ export interface Ibook {
 const insertBilbi = async (book: Ibook) => {
     await dbQuery(
         `INSERT INTO library (nome, autor, editora, imagem) VALUES (?, ?, ?, ?)`, 
-        [book.nome, book.autor, book.editora, book.image]
+        [book.nome, book.autor, book.editora, book.imagem]
     )
     let retorno = await dbQuery(`SELECT seq AS Id FROM sqlite_sequence WHERE name = 'library'`)
     return getBook(retorno[0].Id);
@@ -23,7 +23,6 @@ const listBooks = async () => {
     const retorno = await dbQuery(`SELECT * FROM library`)
     return retorno as Ibook[]
 }
-
 
 const getBook = async (id: number) => {
     const retorno = await dbQuery(`SELECT * FROM library WHERE id = ?`, [id]);
@@ -53,14 +52,14 @@ const updateBook = async (book: Ibook, id: number) => {
         }
     }
     if(book.editora){
-        if(book.image){
+        if(book.imagem){
             query += `autor = "${book.editora}",`
         }else{
             query += `autor = "${book.editora}"`
         }
     }
-    if(book.image){
-        query += `imagem = "${book.image}" `
+    if(book.imagem){
+        query += `imagem = "${book.imagem}" `
     }
 
 
