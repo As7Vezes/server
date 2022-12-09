@@ -2,18 +2,14 @@ import { Ibook, libraryModel } from "../model/libraryModel";
 import { badRequest, internalServerError } from "../utils/util";
 import { Request, Response } from "express";
 
+
+
 const insertBook = async (req: Request, res: Response) => {
 
     const book: Ibook = req.body as Ibook
 
-        if(req.file){
-            book.imagem = req.file.filename
             const product = await libraryModel.insertBilbi(book);
             return res.json(product);   
-        }else{
-            const product = await libraryModel.insertBilbi(book);
-            return res.json(product);
-        }
 }
 
 const listBooks = (req: Request, res: Response) => {
@@ -60,15 +56,8 @@ const updateBook = async (req: Request, res: Response) => {
             return res.json({ message: 'book not found'})
     } 
 
-    if(req.file){
-        book.imagem = req.file.filename
-        const retorno = await libraryModel.updateBook(book,id)
-        return res.json(retorno)
-    }
-    else{
-        const retorno = await libraryModel.updateBook(book,id)
-        return res.json(retorno)
-    }
+    const retorno = await libraryModel.updateBook(book,id)
+    return res.json(retorno)
 
 }
 
