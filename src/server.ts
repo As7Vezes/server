@@ -3,9 +3,7 @@ dotenv.config()
 
 import express from 'express'
 import cors from 'cors' 
-// import { libraryRouter } from './routes/routes'
 import bodyParser from 'body-parser'
-import path from 'path'
 import { useRoutes } from './routes'
 
 const PORT = 8787
