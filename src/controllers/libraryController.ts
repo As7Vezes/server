@@ -29,10 +29,7 @@ const getBooks = async (req: Request, res: Response) => {
         const retorno = await libraryModel.getBook(id)
 
         if(retorno){
-            return res.json({
-                retorno,
-                url: 'http://localhost:8787/files/'
-            }) 
+            return res.json({ retorno }) 
         }
 
         return res.json({erro: 'error'})
@@ -41,7 +38,7 @@ const getBooks = async (req: Request, res: Response) => {
 const deleteBook = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id)
     const retorno = await libraryModel.deleteBook(id)
-    if(retorno || undefined){
+    if(retorno){
         return res.sendStatus(200)
     }
 }

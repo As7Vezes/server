@@ -13,10 +13,7 @@ const insertUser = async (req: Request, res: Response) => {
 const listUsers = (req: Request, res: Response) => {
     userModel.listUsers()
     .then(users => {
-        res.json({
-            users,
-            url: 'http://localhost:8787/files/'
-        })
+        res.json({ users })
     })
     .catch(err => internalServerError(res, err));
 }
@@ -27,10 +24,7 @@ const getUserById = async (req: Request, res: Response) => {
         const retorno = await userModel.getUserById(id)
 
         if(retorno){
-            return res.json({
-                retorno,
-                url: 'http://localhost:8787/files/'
-            }) 
+            return res.json({ retorno }) 
         }
 
         return res.json({erro: 'error'})
@@ -51,7 +45,7 @@ const updateUser = async (req: Request, res: Response) => {
     {
         const productSave = userModel.getUserById(id)
         if(!productSave)
-            return res.json({ message: 'book not found'})
+            return res.json({ message: 'User not found'})
     } 
 
     const retorno = await userModel.updateUser(user,id)

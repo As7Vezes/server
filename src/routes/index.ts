@@ -1,10 +1,8 @@
-import { Application } from "express";
-import Router from 'express';
-import { libraryRouter } from "./routes";
+import { Express } from "express";
+import libraryRouter from "./libraryRouter";
+import { usersRouter } from "./usersRouter";
 
-export const useRoutes = (app: Application) => {
-    const apiRouter = Router();
-    apiRouter.use('/library', libraryRouter);
-
-    app.use('/api/v1', apiRouter);
+export const useRoutes = (app: Express) => {
+    app.use('/library', libraryRouter)
+    app.use('/users', usersRouter)
 }
